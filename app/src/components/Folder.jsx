@@ -11,7 +11,7 @@ const Folder = ({ explorer }) => {
         </div>
         <div style={{ display: expand ? "block" : "none", paddingLeft: 25 }}>
           {explorer.items.map((item) => {
-            return <span key={item.id}>{item.name}</span>;
+            return <Folder explorer={item} key={item.id} />;
           })}
         </div>
       </div>
