@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Folder = ({ explorer }) => {
+const Folder = ({ handleInsertNode, explorer }) => {
   const [expand, setExpand] = useState(false); // whether or not to expand the folder
   const [showInput, setShowInput] = useState({
     visible: false,
@@ -11,6 +11,13 @@ const Folder = ({ explorer }) => {
     e.stopPropagation(); // preventing any parent handlers from being notified of the event.
     setExpand(true); // expand the folder
     setShowInput({ visible: true, isFolder }); // show the input
+  };
+
+  const onAddFolder = (e) => {
+    if (e.keyCode === 13 && e.target.value) {
+      handleInsertNode(explorer.id, e.target.value, showInput.isFolder); // insert the node
+      setShowInput({ ...showInput, visible: false });
+    }
   };
 
   if (explorer.isFolder) {
@@ -29,6 +36,7 @@ const Folder = ({ explorer }) => {
               <span>{showInput.isFolder ? "📁" : "📄"}</span>
               <input
                 type="text"
+                onKeyDown={onAddFolder}
                 onBlur={() => setShowInput({ ...showInput, visible: false })}
                 autoFocus
                 className="inputContainer-input"
@@ -43,7 +51,13 @@ const Folder = ({ explorer }) => {
           )}
 
           {explorer.items.map((item) => {
-            return <Folder explorer={item} key={item.id} />;
+            return (
+              <Folder
+                handleInsertNode={handleInsertNode}
+                explorer={item}
+                key={item.id}
+              />
+            );
           })}
           {/* recursively call the Folder component */}
         </div>
